@@ -1,15 +1,31 @@
-# Build stage: obtain Flutter and build web
-FROM debian:stable-slim AS build
-RUN apt-get update && apt-get install -y curl git unzip xz-utils zip libglu1-mesa ca-certificates && rm -rf /var/lib/apt/lists/*
-RUN git clone https://github.com/flutter/flutter.git /flutter
-ENV PATH="/flutter/bin:/flutter/bin/cache/dart-sdk/bin:${PATH}"
-RUN flutter channel stable && flutter upgrade
-WORKDIR /app
-COPY . .
-RUN flutter config --enable-web
-RUN flutter build web --release
+# ===== Stage 1: Build Flutter Web App =====
+FROM cirrusci/flutter:stable as build
 
-# Runtime: serve with nginx
-FROM nginx:alpine
+WORKDIR /app
+
+# Copy Flutter project
+COPY . .
+
+# Enable web support and build
+RUN flutter config --enable-web \
+    && flutter pub get \
+    && flutter build web --release
+
+# ===== Stage 2: Serve with Nginx =====
+FROM nginx:stable-alpine
+
+# Remove default nginx web files
+RUN rm -rf /usr/share/nginx/html/*
+
+# Copy Flutter build output
 COPY --from=build /app/build/web /usr/share/nginx/html
+
+# Replace default nginx.conf with AIO disabled
+RUN rm /etc/nginx/conf.d/default.conf
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+# Expose port 80
 EXPOSE 80
+
+# Start nginx with aio=off
+CMD ["nginx", "-g", "aio=off; daemon off;"]
