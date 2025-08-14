@@ -1,0 +1,15 @@
+name: flutter_console_ui
+description: A Flutter console-like UI with tabs and image viewer.
+version: 1.0.0
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  file_picker: ^8.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/sample.png
