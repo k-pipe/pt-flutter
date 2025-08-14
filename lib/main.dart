@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
         textTheme: const TextTheme(
           bodyMedium: TextStyle(color: Colors.white),
         ),
-        cardTheme: const CardTheme(color: Color(0xFF1E1E1E)),
+        cardTheme: const CardThemeData(color: Color(0xFF1E1E1E)),
       ),
       home: const MainScreen(),
     );
@@ -236,7 +236,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
 
   Widget _buildConsole() {
     const dummy = '''
-$ flutter run
+flutter run
 [INFO] Starting app...
 [INFO] Loading modules...
 [INFO] Doing important work...
