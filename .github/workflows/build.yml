@@ -18,8 +18,8 @@ jobs:
           password: ${{ secrets.DOCKERHUB_API_KEY }}
 
       - name: Build Docker image
-        run: docker build -t pt-flutter:latest .
+        run: docker build -t pipelining/pt-flutter:latest .
 
       - name: Push Docker image
-        run: docker push pt-flutter:latest
+        run: docker push pipelining/pt-flutter:latest
 
